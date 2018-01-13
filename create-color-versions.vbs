@@ -10,17 +10,32 @@
 
 Option Explicit
 
-Dim objApp
-Set objApp = CreateObject("Illustrator.Application")
+Dim appRef
+Set appRef = CreateObject("Illustrator.Application")
+appRef.UserInteractionLevel = -1
+
+Dim logoID
+logoID = "C:\test\TEST-Elect-Colle-H-BG-RGB"
 
 Dim fileName
-set fileName = "C:\temp\lockup.svg"
+fileName = logoID + ".svg"
+
+Dim saveOptions
+Set saveOptions = CreateObject("Illustrator.EPSSaveOptions")
+saveOptions.CMYKPostScript = True
+
+Dim saveOptionsPDF
+Set saveOptionsPDF = CreateObject("Illustrator.PDFSaveOptions")
 
 'Call the convertColor sub for each color mode
 'Each colorMode sent needs to have an associated action in Illustrator
-convertColor "BG-CMYK-C"
-convertColor "BG-CMYK-U"
+convertColor "CMYK-C"
+convertColor "CMYK-U"
+convertColor "PMS-110C"
+convertColor "PMS-7405U"
 
+'Close Adobe Illustrator
+appRef.Quit
 
 Sub convertColor(colorMode)
 	'opens the file
@@ -30,20 +45,25 @@ Sub convertColor(colorMode)
 	'closes the original without saving
 
 	'open the document with Illustrator
-	Set docRef = objApp.Open(fileName)
+	Dim docRef
+	Set docRef = appRef.Open(fileName)
 	
 	'Run the Illustrator action on the active file 
 	'Call using the format: (action name, action set)
-	docRef.DoScript (colorMode, "Convert Colors")
+	'docRef.DoScript (colorMode, "Convert Colors")
+	appRef.DoScript colorMode, "Convert Colors"
 	
 	'Create the new file name by inserting the color mode text
 	Dim newFileName
-	Set newFileName = Left(filename, Len(fileName)-4) + "-" + colorCode + ".eps"
+	newFileName = logoID + colorMode + ".eps"
+	Dim pdfFileName
+	pdfFileName = logoID + colorMode + ".pdf"
 	
-	'Save the eps file
-	docRef.SaveAs (newFileName)
+	'Save the eps and pdf file
+	docRef.SaveAs newFileName, saveOptions
+	docRef.SaveAs pdfFileName, saveOptionsPDF
 	
 	'Close the svg file without saving
-	docRef.Close
+	docRef.Close	
 
 End Sub
