@@ -29,10 +29,16 @@ Set saveOptionsPDF = CreateObject("Illustrator.PDFSaveOptions")
 
 'Call the convertColor sub for each color mode
 'Each colorMode sent needs to have an associated action in Illustrator
-convertColor "CMYK-C"
-convertColor "CMYK-U"
-convertColor "PMS-110C"
-convertColor "PMS-7405U"
+convertColor "BG-CMYK-C"
+convertColor "BG-CMYK-U"
+convertColor "BG-PMS-110C"
+convertColor "BG-PMS-7405U"
+convertColor "WG-CMYK-C"
+convertColor "WG-CMYK-U"
+convertColor "WG-PMS-110C"
+convertColor "WG-PMS-7405U"
+convertColor "W-CMYK"
+convertColor "B-CMYK"
 
 'Close Adobe Illustrator
 appRef.Quit
